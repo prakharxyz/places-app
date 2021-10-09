@@ -26,6 +26,7 @@ class _AddPlaceState extends State<AddPlace> {
     }
     Provider.of<PlacesProvider>(context)
         .addPlace(_titleController.text, _imageFile);
+    Navigator.of(context).pop();
   }
 
   @override

@@ -17,18 +17,24 @@ class PlacesList extends StatelessWidget {
               })
         ],
       ),
-      body: Consumer<PlacesProvider>(
-        builder: (ctx, provider, ch) => ListView.builder(
-          itemBuilder: (ctx, i) => ListTile(
-            title: Text(provider.list[i].title),
-            leading: Image.file(
-              provider.list[i].image,
-              fit: BoxFit.cover,
-            ),
-          ),
-          itemCount: provider.list.length,
-        ),
-      ),
+      body: FutureBuilder(
+          future: Provider.of<PlacesProvider>(context).fetchAndSetProducts(),
+          builder: (context, snapshot) {
+            return snapshot.connectionState == AsyncSnapshot.waiting()
+                ? Center(child: CircularProgressIndicator())
+                : Consumer<PlacesProvider>(
+                    builder: (ctx, provider, ch) => ListView.builder(
+                      itemBuilder: (ctx, i) => ListTile(
+                        title: Text(provider.list[i].title),
+                        leading: Image.file(
+                          provider.list[i].image,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      itemCount: provider.list.length,
+                    ),
+                  );
+          }),
     );
   }
 }
