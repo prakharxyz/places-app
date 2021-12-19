@@ -12,7 +12,9 @@ class PlacesProvider with ChangeNotifier {
     return [..._list];
   }
 
+  //method to add new place from saveForm method in addNewPlace class by passing title & image file
   void addPlace(String newTitle, File newImage) {
+    //create a model from data we got & add that mode to list
     final newPlace = PlaceModel(
         id: DateTime.now().microsecondsSinceEpoch.toString(),
         title: newTitle,
@@ -21,6 +23,7 @@ class PlacesProvider with ChangeNotifier {
         image: newImage);
     _list.add(newPlace);
     notifyListeners();
+    //insert data in database in table user_places 
     DBHelper.insert('user_places', {
       'id': newPlace.id,
       'title': newPlace.title,
@@ -28,8 +31,11 @@ class PlacesProvider with ChangeNotifier {
     });
   }
 
+  //future method to get data from database table and extracting raw data(in form of list of maps) & setting to _list
   Future<void> fetchAndSetProducts() async {
     final data = await DBHelper.getData('user_places');
+    //loop through each item(map) in list and 
+    //create placeModel by extracting respective data from map to respective variable & then convert to list
     _list = data
         .map((model) => PlaceModel(
             id: model['id'],
